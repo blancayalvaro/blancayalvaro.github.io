@@ -778,72 +778,66 @@
   </footer>
 
   <script>
-    const menuButton = document.querySelector(".menu-button");
-    const navLinks = document.querySelector("#navLinks");
-    const navAnchors = [...document.querySelectorAll(".nav-links a")];
-    const sections = navAnchors
-      .map((link) => document.querySelector(link.getAttribute("href")))
-      .filter(Boolean);
+    const API_URL = "https://script.google.com/macros/s/AKfycbyLbz9vPzEUfJkG8wS0WQSkCn_K-Nr2GwYG14TY9qaDtUm5o8UNxaS8LyQlOZckbBvt3A/exec";
 
-    menuButton.addEventListener("click", () => {
-      const isOpen = navLinks.classList.toggle("open");
-      document.body.classList.toggle("menu-open", isOpen);
-      menuButton.setAttribute("aria-expanded", String(isOpen));
-    });
+    const form = document.querySelector("#rsvpForm");
+    const result = document.querySelector("#formResult");
 
-    navAnchors.forEach((link) => {
-      link.addEventListener("click", () => {
-        navLinks.classList.remove("open");
-        document.body.classList.remove("menu-open");
-        menuButton.setAttribute("aria-expanded", "false");
-      });
-    });
+    function parseBus(value) {
+      return {
+        autobusIda:
+          value === "Bus de ida y vuelta" || value === "Solo bus de ida",
+        autobusVuelta:
+          value === "Bus de ida y vuelta" || value === "Solo bus de vuelta"
+      };
+    }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          navAnchors.forEach((link) => {
-            link.classList.toggle("active", link.getAttribute("href") === `#${entry.target.id}`);
-          });
-        });
-      },
-      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
-    );
-
-    sections.forEach((section) => observer.observe(section));
-
-    document.querySelector("#rsvpForm").addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      const nombre = data.get("nombre").trim();
-      const asistencia = data.get("asistencia");
+
+      const data = new FormData(form);
+
+      const nombre = data.get("nombre")?.trim();
+      const asistenciaText = data.get("asistencia");
       const bus = data.get("bus");
-      const alergias = data.get("alergias").trim() || "Sin alergias o necesidades indicadas";
+      const alergias = data.get("alergias")?.trim() || "";
 
-      const summary = [
-        "Resumen de la respuesta:",
-        `Nombre: ${nombre}`,
-        `Asistencia: ${asistencia}`,
-        `Bus: ${bus}`,
-        `Alergias/necesidades: ${alergias}`
-      ].join("\n");
+      // VALIDACIÓN (todos obligatorios menos alergias)
+      if (!nombre || !asistenciaText || !bus) {
+        result.textContent = "⚠️ Por favor, completa todos los campos obligatorios.";
+        result.classList.add("visible");
+        return;
+      }
 
-      const result = document.querySelector("#formResult");
-      result.textContent = summary;
+      const payload = {
+        nombre,
+        asistencia: asistenciaText === "Sí asistiré",
+        ...parseBus(bus),
+        alergias: alergias || "Sin alergias o necesidades indicadas"
+      };
+
+      result.textContent = "Enviando confirmación...";
       result.classList.add("visible");
-      result.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    });
-
-    document.querySelector("#copyIban").addEventListener("click", async () => {
-      const iban = document.querySelector("#iban").textContent.trim();
-      const status = document.querySelector("#copyStatus");
 
       try {
-        await navigator.clipboard.writeText(iban);
-        status.textContent = "Cuenta copiada.";
-      } catch {
-        status.textContent = "No se ha podido copiar automáticamente.";
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const json = await response.json();
+
+        if (json.success) {
+          result.textContent = "✅ Confirmación enviada correctamente. ¡Gracias!";
+          form.reset();
+        } else {
+          result.textContent = "❌ Error: " + (json.error || "desconocido");
+        }
+      } catch (err) {
+        result.textContent = "❌ Error de red. Inténtalo de nuevo.";
       }
     });
   </script>
