@@ -840,6 +840,27 @@
         result.textContent = "❌ Error de red. Inténtalo de nuevo.";
       }
     });
+
+    const menuButton = document.querySelector(".menu-button");
+    const navLinks = document.querySelector("#navLinks");
+
+    menuButton.addEventListener("click", () => {
+      navLinks.classList.toggle("open");
+
+      const expanded = navLinks.classList.contains("open");
+      menuButton.setAttribute("aria-expanded", expanded);
+
+      document.body.classList.toggle("menu-open", expanded);
+    });
+
+    document.querySelectorAll("#navLinks a").forEach(link => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("open");
+        menuButton.setAttribute("aria-expanded", "false");
+        document.body.classList.remove("menu-open");
+      });
+    });
+
   </script>
 </body>
 </html>
