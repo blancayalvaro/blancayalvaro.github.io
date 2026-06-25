@@ -778,7 +778,7 @@
   </footer>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyLbz9vPzEUfJkG8wS0WQSkCn_K-Nr2GwYG14TY9qaDtUm5o8UNxaS8LyQlOZckbBvt3A/exec";
+    const API_URL = "https://boda-backend.7alvaq7.workers.dev";
 
     const form = document.querySelector("#rsvpForm");
     const result = document.querySelector("#formResult");
@@ -830,7 +830,7 @@
 
         const json = await response.json();
 
-        if (json.success) {
+        if (json.ok) {
           result.textContent = "✅ Confirmación enviada correctamente. ¡Gracias!";
           form.reset();
         } else {
