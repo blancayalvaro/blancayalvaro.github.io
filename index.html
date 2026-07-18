@@ -433,15 +433,12 @@
       display: block;
     }
 
-    .gift-box {
-      display: grid;
-      gap: 16px;
-      max-width: 760px;
-      padding: 30px;
-      border: 1px solid rgba(139, 149, 165, 0.34);
-      border-radius: 8px;
-      background: var(--white);
-      box-shadow: var(--shadow);
+    .gift-box{
+      background:none;
+      box-shadow:none;
+      border:none;
+      padding:0;
+      max-width:650px;
     }
 
     .iban {
@@ -456,6 +453,53 @@
       font-family: Consolas, "Liberation Mono", monospace;
       font-size: clamp(0.9rem, 2.5vw, 1.05rem);
       overflow-wrap: anywhere;
+    }
+
+    .iban-copy{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+
+      margin-top:8px;
+      padding:8px 0;
+
+      border:none;
+      border-bottom:1px solid rgba(139,149,165,.25);
+      background:transparent;
+    }
+
+    .iban-copy span{
+        font-family:Consolas, monospace;
+        color:var(--blue-dark);
+        overflow-wrap:anywhere;
+    }
+
+    .copy-button{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+
+        width:36px;
+        height:36px;
+
+        border:none;
+        background:transparent;
+        cursor:pointer;
+        color:var(--blue-dark);
+
+        border-radius:6px;
+        transition:background .2s;
+        flex-shrink:0;
+    }
+
+    .copy-button:hover{
+        background:rgba(139,149,165,.18);
+    }
+
+    .copy-button svg{
+        width:20px;
+        height:20px;
+        transition:all .2s ease;
     }
 
     footer {
@@ -757,9 +801,29 @@
 
         <div class="gift-box">
           <strong>Cuenta bancaria</strong>
-          <span class="iban" id="iban">ES00 0000 0000 0000 0000 0000</span>
-          <button class="button secondary" type="button" id="copyIban">Copiar cuenta</button>
-          <span class="form-note" id="copyStatus" aria-live="polite"></span>
+
+          <div class="iban-copy">
+              <span id="iban">ES00 0000 0000 0000 0000 0000</span>
+
+              <button
+                  id="copyIban"
+                  class="copy-button"
+                  type="button"
+                  aria-label="Copiar cuenta bancaria">
+
+                  <svg id="copyIcon"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round">
+                      <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+              </button>
+          </div>
         </div>
       </div>
     </section>
@@ -858,6 +922,33 @@
         navLinks.classList.remove("open");
         menuButton.setAttribute("aria-expanded", "false");
         document.body.classList.remove("menu-open");
+      });
+    });
+
+    const copyButton = document.getElementById("copyIban");
+    const iban = document.getElementById("iban");
+    const copyIcon = document.getElementById("copyIcon");
+
+    const copySvg = `
+    <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+    `;
+
+    const checkSvg = `
+    <path d="M20 6L9 17l-5-5"></path>
+    `;
+
+    ["click", "touchend"].forEach(evento => {
+      copyButton.addEventListener(evento, async () => {
+          await navigator.clipboard.writeText(iban.textContent.trim());
+
+          copyIcon.innerHTML = checkSvg;
+          copyIcon.style.color = "#2e7d32";
+
+          setTimeout(() => {
+              copyIcon.innerHTML = copySvg;
+              copyIcon.style.color = "";
+          }, 1000);
       });
     });
 
