@@ -225,7 +225,7 @@
       text-transform: uppercase;
     }
     h2 {
-      color: var(--ink);
+      color: var(--blue-dark);
       font-size: clamp(2.35rem, 9vw, 4rem);
       line-height: .98;
     }
@@ -294,7 +294,7 @@
       text-transform: uppercase;
     }
     .info-card h3 {
-      color: var(--ink);
+      color: var(--blue-dark);
       font-size: 1.7rem;
       line-height: 1.05;
     }
@@ -557,6 +557,11 @@
       color: var(--ink);
       font-size: .9rem;
       font-weight: 700;
+    }
+
+    .required-mark {
+      color: #9aa0a6;
+      font-weight: 500;
     }
     input, select, textarea {
       width: 100%;
@@ -964,7 +969,7 @@
         <a href="#sobrelaboda">Sobre la boda</a>
         <a href="#buses">Transporte y alojamiento</a>
         <a href="#asistencia">Confirmación</a>
-        <a href="#regalos">Detalles</a>
+        <a href="#detalles">Detalles</a>
         <a href="#contacto">Contacto</a>
       </div>
     </nav>
@@ -996,7 +1001,7 @@
       </div>
     </section>
 
-    <section id="info" class="section" aria-labelledby="info-title">
+    <section id="sobrelaboda" class="section" aria-labelledby="info-title">
       <div class="section-inner">
         <div class="section-head reveal">
           <h2 id="info-title">Sobre la boda</h2>
@@ -1113,48 +1118,41 @@
           <pp></pp>
         </div>
 
-        <form id="rsvpForm" class="reveal" autocomplete="off">
+        <form id="rsvpForm" novalidate novalidate class="reveal" autocomplete="off">
           <label>
-            Nombre y apellidos
+            <span>
+              Nombre y apellidos
+              <span class="required-mark" aria-hidden="true">*</span>
+            </span>
             <input type="text" name="nombre" autocomplete="off" required placeholder="Nombre completo" />
           </label>
 
           <div class="form-grid">
-            <fieldset class="field-choice">
-              <legend>Asistencia</legend>
-              <div class="choices">
-                <div class="choice">
-                  <input id="asistire-si" type="radio" name="asistencia" value="Sí asistiré" required />
-                  <label for="asistire-si">Sí, asistiré</label>
-                </div>
-                <div class="choice">
-                  <input id="asistire-no" type="radio" name="asistencia" value="No podré asistir" />
-                  <label for="asistire-no">No podré asistir</label>
-                </div>
-              </div>
-            </fieldset>
+            <label>
+              <span>
+                Asistencia
+                <span class="required-mark" aria-hidden="true">*</span>
+              </span>
+              <select name="asistencia" required>
+                <option value="" selected disabled>Selecciona una opción</option>
+                <option value="Sí asistiré">Sí, asistiré</option>
+                <option value="No podré asistir">No podré asistir</option>
+              </select>
+            </label>
 
-            <fieldset class="field-choice">
-              <legend>Autocar</legend>
-              <div class="choices">
-                <div class="choice">
-                  <input id="bus-ida-vuelta" type="radio" name="bus" value="Bus de ida y vuelta" required />
-                  <label for="bus-ida-vuelta">Ida y vuelta</label>
-                </div>
-                <div class="choice">
-                  <input id="bus-ida" type="radio" name="bus" value="Solo bus de ida" />
-                  <label for="bus-ida">Solo ida</label>
-                </div>
-                <div class="choice">
-                  <input id="bus-vuelta" type="radio" name="bus" value="Solo bus de vuelta" />
-                  <label for="bus-vuelta">Solo vuelta</label>
-                </div>
-                <div class="choice">
-                  <input id="bus-no" type="radio" name="bus" value="No necesito autocar" />
-                  <label for="bus-no">No necesitaré autocar</label>
-                </div>
-              </div>
-            </fieldset>
+            <label>
+              <span>
+                Autocar
+                <span class="required-mark" aria-hidden="true">*</span>
+              </span>
+              <select name="bus" required>
+                <option value="" selected disabled>Selecciona una opción</option>
+                <option value="Bus de ida y vuelta">Ida y vuelta</option>
+                <option value="Solo bus de ida">Solo ida</option>
+                <option value="Solo bus de vuelta">Solo vuelta</option>
+                <option value="No necesito autocar">No necesitaré autocar</option>
+              </select>
+            </label>
           </div>
 
           <label>
@@ -1168,17 +1166,17 @@
       </div>
     </section>
 
-    <section id="regalos" class="section gift-section" aria-labelledby="regalos-title">
+    <section id="detalles" class="section gift-section" aria-labelledby="detalles-title">
       <div class="section-inner">
         <div class="section-head reveal">
-          <h2 id="regalos-title">Detalles</h2>
+          <h2 id="detalles-title">Detalles</h2>
           <p>Para quienes quieran tener un detalle con nosotros, compartimos aquí nuestros datos.</p>
         </div>
 
         <div class="gift-box reveal">
           <strong>Cuenta bancaria</strong>
           <div class="iban-copy">
-            <span id="iban">ES00 0000 0000 0000 0000 0000</span>
+            <span id="iban">ES64 0128 0001 6201 0122 7715</span>
             <button id="copyIban" class="copy-button" type="button" aria-label="Copiar cuenta bancaria" title="Copiar cuenta bancaria">
               <svg id="copyIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <rect x="9" y="9" width="13" height="13" rx="2"></rect>
@@ -1233,6 +1231,17 @@
 
     const form = document.querySelector("#rsvpForm");
     const result = document.querySelector("#formResult");
+    let resultTimeout;
+
+    function showResult(message) {
+      clearTimeout(resultTimeout);
+      result.textContent = message;
+      result.classList.add("visible");
+      resultTimeout = setTimeout(() => {
+        result.classList.remove("visible");
+        result.textContent = "";
+      }, 5000);
+    }
 
     function parseBus(value) {
       return {
@@ -1249,9 +1258,22 @@
       const bus = data.get("bus");
       const alergias = data.get("alergias")?.trim() || "";
 
-      if (!nombre || !asistenciaText || !bus) {
-        result.textContent = "⚠️ Por favor, completa todos los campos obligatorios.";
-        result.classList.add("visible");
+      const camposFaltantes = [];
+
+      if (!nombre) {
+        camposFaltantes.push("Nombre completo");
+      }
+      if (!asistenciaText) {
+        camposFaltantes.push("Asistencia");
+      }
+      if (!bus) {
+        camposFaltantes.push("Autocar");
+      }
+
+      if (camposFaltantes.length > 0) {
+        showResult(
+          `❌ Por favor, completa los campos obligatorios.`
+        );
         return;
       }
 
@@ -1262,8 +1284,7 @@
         alergias: alergias || "Sin alergias o necesidades indicadas"
       };
 
-      result.textContent = "Enviando confirmación...";
-      result.classList.add("visible");
+      showResult("Enviando confirmación...");
 
       try {
         const response = await fetch(API_URL, {
@@ -1274,13 +1295,13 @@
         const json = await response.json();
 
         if (json.ok) {
-          result.textContent = "✅ Confirmación enviada correctamente. ¡Gracias!";
+          showResult("✅ Confirmación enviada correctamente. ¡Gracias!");
           form.reset();
         } else {
-          result.textContent = "❌ Error: " + (json.error || "desconocido");
+          showResult("❌ Error: " + (json.error || "desconocido"));
         }
       } catch (err) {
-        result.textContent = "❌ Error de red. Inténtalo de nuevo.";
+        showResult("❌ Error de red. Inténtalo de nuevo.");
       }
     });
 
