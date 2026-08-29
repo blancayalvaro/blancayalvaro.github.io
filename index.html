@@ -599,14 +599,49 @@
     .contacts {
       display: grid;
       gap: 12px;
-      max-width: 600px;
+      max-width: 700px;
       margin: auto;
     }
     .contact {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      align-items: center;
+      text-align: left;
       padding: 18px;
       border: 1px solid rgba(255,255,255,.18);
       border-radius: 16px;
       background: rgba(255,255,255,.07);
+    }
+    .contact::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-repeat: no-repeat;
+      background-position: left center;
+      background-size: auto 170%;
+      opacity: .40;
+      pointer-events: none;
+    }
+    .contact-blanca::before { background-image: url("assets/blanca.png"); }
+    .contact-alvaro::before { background-image: url("assets/alvaro.png"); }
+    .contact-blanca::before {
+      background-size: auto 350%;
+      background-position: -42px top;
+    }
+    .contact-alvaro::before {
+      background-size: auto 165%;
+      background-position: 24px -8px;
+    }
+    .contact > * { position: relative; z-index: 1; }
+    .contact-info {
+      grid-column: 2;
+      min-width: 0;
+      padding-left: 0px;
+      text-align: center;
     }
     .contact-name {
       display: block;
@@ -991,14 +1026,18 @@
     <div class="contact-inner reveal">
       <h2 id="contacto-title" class="footer-title">Contacto</h2>
       <p class="footer-copy">Para cualquier duda, podéis poneros en contacto con nosotros.</p>
-      <div class="contacts">
-        <div class="contact">
-          <span class="contact-name">Blanca</span>
-          <a class="contact-phone" href="tel:+34606607876">+34 606 607 876</a>
+        <div class="contacts">
+        <div class="contact contact-blanca">
+          <div class="contact-info">
+            <span class="contact-name">Blanca</span>
+            <a class="contact-phone" href="tel:+34606607876">+34 606 607 876</a>
+          </div>
         </div>
-        <div class="contact">
-          <span class="contact-name">Álvaro</span>
-          <a class="contact-phone" href="tel:+34660782787">+34 660 782 787</a>
+        <div class="contact contact-alvaro">
+          <div class="contact-info">
+            <span class="contact-name">Álvaro</span>
+            <a class="contact-phone" href="tel:+34660782787">+34 660 782 787</a>
+          </div>
         </div>
       </div>
     </div>
