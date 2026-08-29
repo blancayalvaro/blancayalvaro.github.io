@@ -464,6 +464,7 @@
       display: grid;
       gap: 10px;
     }
+    .hotel-list + .accommodation-copy { margin-top: 28px; }
     .hotel {
       display: flex;
       align-items: center;
@@ -473,17 +474,15 @@
       border-radius: 14px;
       background: rgba(255,255,255,.1);
     }
+    .hotel > div { min-width: 0; }
     .hotel strong { display: block; color: var(--white); }
     .hotel span { display: block; margin-top: 2px; color: rgba(255,255,255,.7); font-size: .78rem; }
-    .hotel-badge {
+    .hotel-location {
       flex: 0 0 auto;
-      color: var(--white);
-      font-size: .68rem;
-      font-weight: 800;
-      letter-spacing: .08em;
-      text-transform: uppercase;
+      min-height: 40px;
+      padding: 9px 14px;
+      font-size: .78rem;
     }
-
     .rsvp-section { background: var(--paper); }
     form {
       display: grid;
@@ -866,10 +865,33 @@
             <div>
               <h3>Alojamiento</h3>
               <p class="accommodation-copy">
-                Desde Bodegas Concejo nos facilitan alojamiento para invitados en la hospedería ubicada en Valoria la Buena. En caso de necesitarlo, podéis contactar con nosotros para resolver cualquier cuestión relacionada con la estancia.
+                Desde Bodegas Concejo nos ofrecen tarifas especiales en los siguientes alojamientos:
               </p>
+              <div class="hotel-list" aria-label="Alojamientos para invitados">
+                <div class="hotel">
+                  <div>
+                    <strong>Hospedería de Bodegas Concejo</strong>
+                    <span>Pl. Hortal, s/n, 47200 Valoria la Buena, Valladolid</span>
+                  </div>
+                  <a class="button hotel-location" href="https://www.google.com/maps/search/?api=1&amp;query=Plaza%20Hortal%20s%2Fn%2C%2047200%20Valoria%20la%20Buena%2C%20Valladolid" target="_blank" rel="noopener">Ver ubicación</a>
+                </div>
+                <div class="hotel">
+                  <div>
+                    <strong>Hotel Recoletos Valladolid</strong>
+                    <span>Acera de Recoletos, 13, 47004 Valladolid</span>
+                  </div>
+                  <a class="button hotel-location" href="https://www.google.com/maps/search/?api=1&amp;query=Acera%20de%20Recoletos%2013%2C%2047004%20Valladolid" target="_blank" rel="noopener">Ver ubicación</a>
+                </div>
+                <div class="hotel">
+                  <div>
+                    <strong>Hotel Gareus</strong>
+                    <span>Calle Colmenares, 2, 47004 Valladolid</span>
+                  </div>
+                  <a class="button hotel-location" href="https://www.google.com/maps/search/?api=1&amp;query=Calle%20Colmenares%202%2C%2047004%20Valladolid" target="_blank" rel="noopener">Ver ubicación</a>
+                </div>
+              </div>
               <p class="accommodation-copy">
-                <strong>Dirección:</strong> Pl. Hortal, S/ N, 47200 Valoria la Buena, Valladolid
+                Podéis contactar con nosotros para resolver cualquier cuestión relacionada con la estancia.
               </p>
               <a class="button accommodation-contact" href="#contacto">Contactar</a>
             </div>
